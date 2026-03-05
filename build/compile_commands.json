@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/sascha/dev/graph/build",
+  "command": "/usr/bin/cc -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP  -std=gnu2x -o CMakeFiles/graph.dir/src/main.c.o -c /home/sascha/dev/graph/src/main.c",
+  "file": "/home/sascha/dev/graph/src/main.c",
+  "output": "CMakeFiles/graph.dir/src/main.c.o"
+}
+]
