@@ -11,14 +11,18 @@
 
 typedef struct _ball_system{
 	int* x;
+	float* x_vel;
 	int* y;
+	float* y_vel;
 	int capacity;
 	int size;
 } ball_system;
 
 void ball_system_init(ball_system* system){
 	system->x = malloc(sizeof(int)*STANDARD_CAPACITY);
-	system->y = malloc(sizeof(int)*STANDARD_CAPACITY);
+	system->x_vel = malloc(sizeof(float)*STANDARD_CAPACITY);
+	system->y = malloc(sizeof(float)*STANDARD_CAPACITY);
+	system->y_vel = malloc(sizeof(int)*STANDARD_CAPACITY);
 	system->capacity = STANDARD_CAPACITY;
 	system->size = 0;
 	printf("Init\n");
@@ -27,24 +31,28 @@ void ball_system_init(ball_system* system){
 void ball_system_free(ball_system* system){
 	free(system->x);
 	free(system->y);
+	free(system->y_vel);
+	free(system->x_vel);
 	system->x = NULL;
 	system->y = NULL;
 	system->capacity = 0;
 	system->size = 0;
-	printf("Freed\n");
 }
 
 void ball_system_add_ball(ball_system* system, int x, int y){
 	if(system->size >= system->capacity){
 		system->capacity *= 2;
-		printf("Multiplied\n");
 		
 		system->x = realloc(system->x, sizeof(int)*system->capacity);
+		system->x_vel = realloc(system->x_vel, sizeof(float)*system->capacity);
 		system->y = realloc(system->y, sizeof(int)*system->capacity);
+		system->y_vel = realloc(system->y_vel, sizeof(float)*system->capacity);
 	}
 
 	system->x[system->size] = x;
 	system->y[system->size] = y;
+	system->x_vel[system->size] = 0;
+	system->y_vel[system->size] = 0;
 	system->size += 1;
 }
 
@@ -74,6 +82,15 @@ int ball_system_check_mouse_touch(ball_system* system, bool* touched){
 	return smallest_index;
 }
 
+void ball_system_update(ball_system* system){
+	// TODO Gravity code
+	
+	for(int i = 0; i < system->size; i++){
+		system->x[i] += system->x_vel[i];
+		system->y[i] += system->y_vel[i];
+	}
+}
+
 int main(void)
 {
     InitWindow(800, 450, "raylib [core] example - basic window");
@@ -87,13 +104,12 @@ int main(void)
     while (!WindowShouldClose())
     {
 		bool touched;
+		bool grabving;
+		int touched_index = ball_system_check_mouse_touch(&system, &touched);
+		ball_system_update(&system);
 
         BeginDrawing();
-		int index = ball_system_check_mouse_touch(&system, &touched);
-		if(touched){
-			printf("Touching index: %i\n", index);
-		}
-		ball_system_draw_balls(&system, index, touched);
+		ball_system_draw_balls(&system, touched_index, touched);
         ClearBackground(BLACK);
         EndDrawing();
     }
