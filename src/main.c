@@ -81,7 +81,7 @@ int main(void)
 	ball_system_init(&system);
 
 	for(int i = 0; i <= 10; i++){
-		ball_system_add_ball(&system, i * 30, 40);
+		ball_system_add_ball(&system, i * 50, 40);
 	}
 
     while (!WindowShouldClose())
