@@ -37,6 +37,7 @@ CMakeFiles/graph.dir/src/main.c.o: /home/sascha/dev/graph/src/main.c \
   /usr/include/bits/struct_mutex.h \
   /usr/include/bits/struct_rwlock.h \
   /usr/include/bits/thread-shared-types.h \
+  /usr/include/bits/time.h \
   /usr/include/bits/time64.h \
   /usr/include/bits/timesize.h \
   /usr/include/bits/types.h \
@@ -44,15 +45,19 @@ CMakeFiles/graph.dir/src/main.c.o: /home/sascha/dev/graph/src/main.c \
   /usr/include/bits/types/__FILE.h \
   /usr/include/bits/types/__fpos64_t.h \
   /usr/include/bits/types/__fpos_t.h \
+  /usr/include/bits/types/__locale_t.h \
   /usr/include/bits/types/__mbstate_t.h \
   /usr/include/bits/types/__sigset_t.h \
   /usr/include/bits/types/clock_t.h \
   /usr/include/bits/types/clockid_t.h \
   /usr/include/bits/types/cookie_io_functions_t.h \
+  /usr/include/bits/types/locale_t.h \
   /usr/include/bits/types/sigset_t.h \
   /usr/include/bits/types/struct_FILE.h \
+  /usr/include/bits/types/struct_itimerspec.h \
   /usr/include/bits/types/struct_timespec.h \
   /usr/include/bits/types/struct_timeval.h \
+  /usr/include/bits/types/struct_tm.h \
   /usr/include/bits/types/time_t.h \
   /usr/include/bits/types/timer_t.h \
   /usr/include/bits/typesizes.h \
@@ -76,6 +81,7 @@ CMakeFiles/graph.dir/src/main.c.o: /home/sascha/dev/graph/src/main.c \
   /usr/include/sys/cdefs.h \
   /usr/include/sys/select.h \
   /usr/include/sys/types.h \
+  /usr/include/time.h \
   /usr/lib/gcc/x86_64-redhat-linux/15/include/limits.h \
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stdarg.h \
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stdbool.h \
@@ -109,8 +115,6 @@ CMakeFiles/graph.dir/src/main.c.o:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
 
-/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
-
 /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o:
 
 /usr/lib64/libm.so:
@@ -121,8 +125,6 @@ CMakeFiles/graph.dir/src/main.c.o:
 
 /lib64/libgcc_s.so.1:
 
-/lib64/libc.so.6:
-
 /lib64/ld-linux-x86-64.so.2:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h:
@@ -131,9 +133,7 @@ CMakeFiles/graph.dir/src/main.c.o:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stdarg.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/15/include/syslimits.h:
-
-/usr/include/sys/types.h:
+/usr/include/time.h:
 
 /usr/include/sys/select.h:
 
@@ -150,6 +150,14 @@ CMakeFiles/graph.dir/src/main.c.o:
 /usr/include/features-time64.h:
 
 /usr/include/bits/wordsize.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/bits/uintn-identity.h:
+
+/usr/include/bits/typesizes.h:
 
 /usr/local/lib64/libraylib.a:
 
@@ -197,6 +205,10 @@ CMakeFiles/graph.dir/src/main.c.o:
 
 /usr/include/bits/byteswap.h:
 
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
+
+/usr/include/bits/time.h:
+
 /usr/lib64/libc.so:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/limits.h:
@@ -227,7 +239,11 @@ CMakeFiles/graph.dir/src/main.c.o:
 
 /usr/include/bits/types/__sigset_t.h:
 
-/usr/include/bits/waitflags.h:
+/usr/lib/gcc/x86_64-redhat-linux/15/include/syslimits.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/bits/types/struct_itimerspec.h:
 
 /usr/include/bits/mathcalls.h:
 
@@ -239,15 +255,13 @@ CMakeFiles/graph.dir/src/main.c.o:
 
 /usr/include/bits/flt-eval-method.h:
 
+/usr/include/bits/types/__locale_t.h:
+
 /usr/include/bits/posix1_lim.h:
 
 /usr/include/bits/fp-fast.h:
 
-/usr/include/bits/waitstatus.h:
-
 /usr/include/bits/pthread_stack_min-dynamic.h:
-
-/usr/include/bits/wchar.h:
 
 /usr/include/bits/types/sigset_t.h:
 
@@ -285,15 +299,19 @@ CMakeFiles/graph.dir/src/main.c.o:
 
 /usr/include/bits/types/cookie_io_functions_t.h:
 
-/usr/include/bits/uintn-identity.h:
+/lib64/libc.so.6:
 
-/usr/include/bits/typesizes.h:
+/usr/include/bits/types/locale_t.h:
 
 /usr/include/bits/types/struct_timespec.h:
 
 /usr/include/bits/stdio_lim.h:
 
 /usr/include/bits/types/struct_timeval.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/bits/types/struct_tm.h:
 
 /usr/include/bits/mathcalls-helper-functions.h:
 

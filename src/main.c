@@ -5,11 +5,13 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define STANDARD_CAPACITY 10
 #define STANDARD_RADIUS 20.0
 
-#define GRAVITY_MULTIPLIER 1
+#define REPULSION_MULTIPLIER 1
+#define GRAVITY_MULTIPLIER 0.1
 
 typedef struct _ball_system{
 	float* x;
@@ -87,7 +89,38 @@ int ball_system_check_mouse_touch(ball_system* system, bool* touched){
 }
 
 void ball_system_update(ball_system* system){
-	// TODO Gravity code
+	for(int i = 0; i < system->size; i++){
+		for(int j = 0; j < system->size; j++){
+			if(i != j){
+				float distance_x = system->x[j] - system->x[i];
+				float distance_y = system->y[j] - system->y[i];
+				float distance = sqrt((distance_x * distance_x) + (distance_y * distance_y));
+
+				if(distance == 0){
+					distance = 1;
+				}
+
+				float force = GRAVITY_MULTIPLIER * ((STANDARD_RADIUS*STANDARD_RADIUS) / (distance * distance));
+				float repulsion = REPULSION_MULTIPLIER * ((STANDARD_RADIUS * STANDARD_RADIUS) / (distance * distance * distance));
+
+				
+				// Initialize and normalize direction vector
+				float direction_vector_x = distance_x / distance;
+				float direction_vector_y = distance_y / distance;
+				// Transliate to moement vector
+				float movement_vector_x = force * direction_vector_x;
+				float movement_vector_y = force * direction_vector_y;
+				// Translate a repulsion vector
+				float repulsion_vector_x = repulsion * direction_vector_x;
+				float repulsion_vector_y = repulsion * direction_vector_y;
+
+				system->x_vel[i] -= repulsion_vector_x;
+				system->y_vel[i] -= repulsion_vector_y;
+				system->x_vel[i] += movement_vector_x;
+				system->y_vel[i] += movement_vector_y;
+			}
+		}
+	}
 	
 	for(int i = 0; i < system->size; i++){
 		system->x[i] += system->x_vel[i] * GetFrameTime();
@@ -97,13 +130,16 @@ void ball_system_update(ball_system* system){
 
 int main(void)
 {
-    InitWindow(800, 450, "raylib [core] example - basic window");
+    InitWindow(800, 450, "Graph");
 	ball_system system;
 	ball_system_init(&system);
 
+	//srand(time(NULL));
+
 	for(int i = 0; i <= 10; i++){
-		ball_system_add_ball(&system, i * 50, 40);
+		ball_system_add_ball(&system, rand() % 800, rand() % 450);
 	}
+
 
     while (!WindowShouldClose())
     {
