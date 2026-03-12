@@ -9,20 +9,22 @@
 #define STANDARD_CAPACITY 10
 #define STANDARD_RADIUS 20.0
 
+#define GRAVITY_MULTIPLIER 1
+
 typedef struct _ball_system{
-	int* x;
+	float* x;
 	float* x_vel;
-	int* y;
+	float* y;
 	float* y_vel;
 	int capacity;
 	int size;
 } ball_system;
 
 void ball_system_init(ball_system* system){
-	system->x = malloc(sizeof(int)*STANDARD_CAPACITY);
+	system->x = malloc(sizeof(float)*STANDARD_CAPACITY);
 	system->x_vel = malloc(sizeof(float)*STANDARD_CAPACITY);
 	system->y = malloc(sizeof(float)*STANDARD_CAPACITY);
-	system->y_vel = malloc(sizeof(int)*STANDARD_CAPACITY);
+	system->y_vel = malloc(sizeof(float)*STANDARD_CAPACITY);
 	system->capacity = STANDARD_CAPACITY;
 	system->size = 0;
 	printf("Init\n");
@@ -35,6 +37,8 @@ void ball_system_free(ball_system* system){
 	free(system->x_vel);
 	system->x = NULL;
 	system->y = NULL;
+	system->x_vel = NULL;
+	system->y_vel = NULL;
 	system->capacity = 0;
 	system->size = 0;
 }
@@ -43,9 +47,9 @@ void ball_system_add_ball(ball_system* system, int x, int y){
 	if(system->size >= system->capacity){
 		system->capacity *= 2;
 		
-		system->x = realloc(system->x, sizeof(int)*system->capacity);
+		system->x = realloc(system->x, sizeof(float)*system->capacity);
 		system->x_vel = realloc(system->x_vel, sizeof(float)*system->capacity);
-		system->y = realloc(system->y, sizeof(int)*system->capacity);
+		system->y = realloc(system->y, sizeof(float)*system->capacity);
 		system->y_vel = realloc(system->y_vel, sizeof(float)*system->capacity);
 	}
 
@@ -70,8 +74,8 @@ int ball_system_check_mouse_touch(ball_system* system, bool* touched){
 	*touched = false;
 
 	for(int i = 0; i < system->size; i++){
-		float distance_x = abs(system->x[i] - GetMouseX());
-		float distance_y = abs(system->y[i] - GetMouseY());
+		float distance_x = fabs(system->x[i] - GetMouseX());
+		float distance_y = fabs(system->y[i] - GetMouseY());
 		float distance = sqrt(distance_x * distance_x + distance_y * distance_y);
 
 		smallest_index = (distance < smallest_distance) ? i : smallest_index;
@@ -86,8 +90,8 @@ void ball_system_update(ball_system* system){
 	// TODO Gravity code
 	
 	for(int i = 0; i < system->size; i++){
-		system->x[i] += system->x_vel[i];
-		system->y[i] += system->y_vel[i];
+		system->x[i] += system->x_vel[i] * GetFrameTime();
+		system->y[i] += system->y_vel[i] * GetFrameTime();
 	}
 }
 
@@ -104,7 +108,7 @@ int main(void)
     while (!WindowShouldClose())
     {
 		bool touched;
-		bool grabving;
+		bool grabbing;
 		int touched_index = ball_system_check_mouse_touch(&system, &touched);
 		ball_system_update(&system);
 
