@@ -10,8 +10,8 @@
 #define STANDARD_CAPACITY 10
 #define STANDARD_RADIUS 20.0
 
-#define REPULSION_MULTIPLIER 50
-#define GRAVITY_MULTIPLIER 50
+#define PREFERED_DISTANCE 200
+#define STIFFNESS 0.1
 
 typedef struct _ball_system{
 	float* x;
@@ -96,28 +96,16 @@ void ball_system_update(ball_system* system){
 				float distance_y = system->y[j] - system->y[i];
 				float distance = sqrt((distance_x * distance_x) + (distance_y * distance_y));
 
-				if(distance == 0){
-					distance = 1;
-				}
+				float force = STIFFNESS * (PREFERED_DISTANCE - distance);
 
-				float force = GRAVITY_MULTIPLIER * ((STANDARD_RADIUS*STANDARD_RADIUS) / (distance * distance));
-				float repulsion = REPULSION_MULTIPLIER * ((STANDARD_RADIUS * STANDARD_RADIUS) / (distance * distance * distance));
+				float normalized_vector_x = distance_x / distance;
+				float normalized_vector_y = distance_y / distance;
 
+				float movement_vector_x = force * normalized_vector_x;
+				float movement_vector_y = force * normalized_vector_y;
 				
-				// Initialize and normalize direction vector
-				float direction_vector_x = distance_x / distance;
-				float direction_vector_y = distance_y / distance;
-				// Transliate to moement vector
-				float movement_vector_x = force * direction_vector_x;
-				float movement_vector_y = force * direction_vector_y;
-				// Translate a repulsion vector
-				float repulsion_vector_x = repulsion * direction_vector_x;
-				float repulsion_vector_y = repulsion * direction_vector_y;
-
-				system->x_vel[i] -= repulsion_vector_x;
-				system->y_vel[i] -= repulsion_vector_y;
-				system->x_vel[i] += movement_vector_x;
-				system->y_vel[i] += movement_vector_y;
+				system->x_vel[i] -= movement_vector_x;
+				system->y_vel[i] -= movement_vector_y;
 			}
 		}
 
@@ -139,7 +127,7 @@ int main(void)
 
 	//srand(time(NULL));
 
-	for(int i = 0; i <= 10; i++){
+	for(int i = 0; i < 20; i++){
 		ball_system_add_ball(&system, rand() % 800, rand() % 450);
 	}
 
