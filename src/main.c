@@ -11,7 +11,7 @@
 #define STANDARD_RADIUS 20.0
 
 #define REPULSION_MULTIPLIER 50
-#define GRAVITY_MULTIPLIER 1
+#define GRAVITY_MULTIPLIER 50
 
 typedef struct _ball_system{
 	float* x;
@@ -120,13 +120,14 @@ void ball_system_update(ball_system* system){
 				system->y_vel[i] += movement_vector_y;
 			}
 		}
+
+		system->x_vel[i] *= 0.99;
+		system->y_vel[i] *= 0.99;
 	}
 	
 	for(int i = 0; i < system->size; i++){
 		system->x[i] += system->x_vel[i] * GetFrameTime();
-		system->y[i] *= 0.99;
 		system->y[i] += system->y_vel[i] * GetFrameTime();
-		system->y[i] *= 0.99;
 	}
 }
 
