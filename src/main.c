@@ -10,9 +10,6 @@
 #define STANDARD_CAPACITY 10
 #define STANDARD_RADIUS 20.0
 
-#define PREFERED_DISTANCE 200
-#define STIFFNESS 0.1
-
 typedef struct _ball_system{
 	float* x;
 	float* x_vel;
@@ -21,6 +18,19 @@ typedef struct _ball_system{
 	int capacity;
 	int size;
 } ball_system;
+
+void hookes_spring(float ax, float ay, float bx, float by, float *x_vel, float *y_vel, float prefered_distance, float stiffness){
+	float distance_x = bx - ax;
+	float distance_y = by - ay;
+	float distance = sqrt((distance_x * distance_x) + (distance_y * distance_y));
+	float force = stiffness * (prefered_distance - distance);
+	float normalized_vector_x = distance_x / distance;
+	float normalized_vector_y = distance_y / distance;
+	float movement_vector_x = force * normalized_vector_x;
+	float movement_vector_y = force * normalized_vector_y;
+	*x_vel -= movement_vector_x;
+	*y_vel -= movement_vector_y;
+}
 
 void ball_system_init(ball_system* system){
 	system->x = malloc(sizeof(float)*STANDARD_CAPACITY);
@@ -88,26 +98,19 @@ int ball_system_check_mouse_touch(ball_system* system, bool* touched){
 	return smallest_index;
 }
 
-void ball_system_update(ball_system* system){
+void ball_system_update(ball_system* system, bool grabbing, int grabbed_index){
 	for(int i = 0; i < system->size; i++){
+		if(grabbing && i == grabbed_index){
+			hookes_spring(system->x[i], system->y[i], GetMouseX(), GetMouseY(), &system->x_vel[i], &system->y_vel[i], 0, 1);
+		}
+
 		for(int j = 0; j < system->size; j++){
 			if(i != j){
-				float distance_x = system->x[j] - system->x[i];
-				float distance_y = system->y[j] - system->y[i];
-				float distance = sqrt((distance_x * distance_x) + (distance_y * distance_y));
-
-				float force = STIFFNESS * (PREFERED_DISTANCE - distance);
-
-				float normalized_vector_x = distance_x / distance;
-				float normalized_vector_y = distance_y / distance;
-
-				float movement_vector_x = force * normalized_vector_x;
-				float movement_vector_y = force * normalized_vector_y;
-				
-				system->x_vel[i] -= movement_vector_x;
-				system->y_vel[i] -= movement_vector_y;
+				hookes_spring(system->x[i], system->y[i], system->x[j], system->y[j], &system->x_vel[i], &system->y_vel[i], 250, 0.01);
 			}
 		}
+
+		hookes_spring(system->x[i], system->y[i], GetScreenWidth()/2, GetScreenHeight()/2, &system->x_vel[i], &system->y_vel[i], 0, 0.01);
 
 		system->x_vel[i] *= 0.99;
 		system->y_vel[i] *= 0.99;
@@ -119,8 +122,8 @@ void ball_system_update(ball_system* system){
 	}
 }
 
-int main(void)
-{
+int main(void){
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(800, 450, "Graph");
 	ball_system system;
 	ball_system_init(&system);
@@ -135,9 +138,8 @@ int main(void)
     while (!WindowShouldClose())
     {
 		bool touched;
-		bool grabbing;
 		int touched_index = ball_system_check_mouse_touch(&system, &touched);
-		ball_system_update(&system);
+		ball_system_update(&system, touched && IsMouseButtonDown(MOUSE_BUTTON_LEFT), touched_index);
 
         BeginDrawing();
 		ball_system_draw_balls(&system, touched_index, touched);
