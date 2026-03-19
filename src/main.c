@@ -127,9 +127,8 @@ int main(void){
     InitWindow(800, 450, "Graph");
 	ball_system system;
 	ball_system_init(&system);
-	SetTargetFPS(60);
 
-	srand(time(NULL));
+	//srand(time(NULL));
 
 	for(int i = 0; i < 20; i++){
 		ball_system_add_ball(&system, rand() % 800, rand() % 450);
