@@ -26,6 +26,7 @@ void hookes_spring(float ax, float ay, float bx, float by, float *x_vel, float *
 	float distance_y = by - ay;
 	float distance = sqrt((distance_x * distance_x) + (distance_y * distance_y));
 	float force = stiffness * (prefered_distance - distance);
+	distance = distance == 0 ? 1 : distance;
 	float normalized_vector_x = distance_x / distance;
 	float normalized_vector_y = distance_y / distance;
 	float movement_vector_x = force * normalized_vector_x;
@@ -116,6 +117,7 @@ void ball_system_update(ball_system* system, bool grabbing, int grabbed_index){
 
 		system->x_vel[i] *= 1 - DRAG_COEFFICIENT * GetFrameTime();
 		system->y_vel[i] *= 1 - DRAG_COEFFICIENT * GetFrameTime();
+		printf("%f %f\n", system->x[i], system->y[i]);
 	}
 	
 	for(int i = 0; i < system->size; i++){
@@ -133,7 +135,7 @@ int main(void){
 
 	srand(time(NULL));
 
-	for(int i = 0; i <= 4; i++){
+	for(int i = 0; i <= 20; i++){
 		ball_system_add_ball(&system, rand() % 800, rand() % 450);
 	}
 
