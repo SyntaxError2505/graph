@@ -10,6 +10,8 @@
 #define STANDARD_CAPACITY 10
 #define STANDARD_RADIUS 20.0
 
+#define DRAG_COEFFICIENT 5
+
 typedef struct _ball_system{
 	float* x;
 	float* x_vel;
@@ -28,8 +30,8 @@ void hookes_spring(float ax, float ay, float bx, float by, float *x_vel, float *
 	float normalized_vector_y = distance_y / distance;
 	float movement_vector_x = force * normalized_vector_x;
 	float movement_vector_y = force * normalized_vector_y;
-	*x_vel -= movement_vector_x;
-	*y_vel -= movement_vector_y;
+	*x_vel -= movement_vector_x * GetFrameTime();
+	*y_vel -= movement_vector_y * GetFrameTime();
 }
 
 void ball_system_init(ball_system* system){
@@ -101,19 +103,19 @@ int ball_system_check_mouse_touch(ball_system* system, bool* touched){
 void ball_system_update(ball_system* system, bool grabbing, int grabbed_index){
 	for(int i = 0; i < system->size; i++){
 		if(grabbing && i == grabbed_index){
-			hookes_spring(system->x[i], system->y[i], GetMouseX(), GetMouseY(), &system->x_vel[i], &system->y_vel[i], 0, 1);
+			hookes_spring(system->x[i], system->y[i], GetMouseX(), GetMouseY(), &system->x_vel[i], &system->y_vel[i], 0, 1000);
 		}
 
 		for(int j = 0; j < system->size; j++){
 			if(i != j){
-				hookes_spring(system->x[i], system->y[i], system->x[j], system->y[j], &system->x_vel[i], &system->y_vel[i], 250, 0.01);
+				hookes_spring(system->x[i], system->y[i], system->x[j], system->y[j], &system->x_vel[i], &system->y_vel[i], 250, 100);
 			}
 		}
 
-		hookes_spring(system->x[i], system->y[i], GetScreenWidth()/2, GetScreenHeight()/2, &system->x_vel[i], &system->y_vel[i], 0, 0.01);
+		hookes_spring(system->x[i], system->y[i], GetScreenWidth()/2.0, GetScreenHeight()/2.0, &system->x_vel[i], &system->y_vel[i], 0, 50);
 
-		system->x_vel[i] *= 0.99;
-		system->y_vel[i] *= 0.99;
+		system->x_vel[i] *= 1 - DRAG_COEFFICIENT * GetFrameTime();
+		system->y_vel[i] *= 1 - DRAG_COEFFICIENT * GetFrameTime();
 	}
 	
 	for(int i = 0; i < system->size; i++){
@@ -127,10 +129,11 @@ int main(void){
     InitWindow(800, 450, "Graph");
 	ball_system system;
 	ball_system_init(&system);
+	SetTargetFPS(60);
 
-	//srand(time(NULL));
+	srand(time(NULL));
 
-	for(int i = 0; i < 20; i++){
+	for(int i = 0; i <= 4; i++){
 		ball_system_add_ball(&system, rand() % 800, rand() % 450);
 	}
 
